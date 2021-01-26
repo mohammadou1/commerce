@@ -33,6 +33,7 @@ export type SearchWoocommerceProductsInput = {
   on_sale?: boolean
   min_price?: string
   max_price?: string
+  featured?: boolean
 }
 
 export const fetcher: HookFetcher<
