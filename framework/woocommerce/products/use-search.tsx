@@ -1,7 +1,7 @@
 import type { HookFetcher } from '@commerce/utils/types'
 import type { SwrOptions } from '@commerce/utils/use-data'
 import useCommerceSearch from '@commerce/products/use-search'
-import { SearchProductsData } from '../api/catalog/products'
+import { SearchProductsData } from '../api/products'
 
 const defaultOpts = {
   url: '/wp-json/wc/v3/products',
