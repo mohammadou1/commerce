@@ -14,9 +14,15 @@ Note that this provider is going to be merged into next commerce main repo when 
 [] useCustomer
 [] useOrder (Cart and checkout)
 
+
+
 Notice that the current goal is to finish rest apis then do graphql, prs to do graphql are welcome
 
+
+
 > Since WooCommerce doesn't have an integrated whishlist and cart apis, only order is supported so far
+
+
 
 in order to run it in your localhost, you have to clone this repo and use the branch ```
 feature/woocommerce```
