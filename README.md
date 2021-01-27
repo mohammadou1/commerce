@@ -17,6 +17,7 @@ Note that this provider is going to be merged into next commerce main repo when 
 <br />
 Notice that the current goal is to finish rest apis then do graphql, prs to do graphql are welcome
 <br />
+<br />
 
 >> Since WooCommerce doesn't have an integrated whishlist and cart apis, only order is supported so far
 
