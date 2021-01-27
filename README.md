@@ -6,7 +6,8 @@ Pull requests are welcome
 Note that this provider is going to be merged into next commerce main repo when it's done
 [Next Commerce](https://github.com/vercel/commerce)
 
-## Features
+## Features.
+
 - [x] getProducts
 - [x] getProduct
 - [ ] useLogin
@@ -16,7 +17,9 @@ Note that this provider is going to be merged into next commerce main repo when 
 <br />
 Notice that the current goal is to finish rest apis then do graphql, prs to do graphql are welcome
 <br />
-> Since WooCommerce doesn't have an integrated whishlist and cart apis, only order is supported so far
+
+>> Since WooCommerce doesn't have an integrated whishlist and cart apis, only order is supported so far
+
 <br />
 in order to run it in your localhost, you have to clone this repo and use the branch ```
 feature/woocommerce```
