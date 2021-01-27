@@ -7,12 +7,12 @@ Note that this provider is going to be merged into next commerce main repo when 
 [Next Commerce](https://github.com/vercel/commerce)
 
 ## Features
-[x] getProducts
-[x] getProduct
-[] useLogin
-[] useSignup
-[] useCustomer
-[] useOrder (Cart and checkout)
+- [x] getProducts
+- [x] getProduct
+- [] useLogin
+- [] useSignup
+- [] useCustomer
+- [] useOrder (Cart and checkout)
 
 
 
