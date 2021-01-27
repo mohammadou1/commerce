@@ -9,10 +9,10 @@ Note that this provider is going to be merged into next commerce main repo when 
 ## Features
 - [x] getProducts
 - [x] getProduct
-- [] useLogin
-- [] useSignup
-- [] useCustomer
-- [] useOrder (Cart and checkout)
+- [ ] useLogin
+- [ ] useSignup
+- [ ] useCustomer
+- [ ] useOrder (Cart and checkout)
 
 
 
