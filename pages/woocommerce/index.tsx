@@ -8,7 +8,7 @@ const IndexPage = ({ products }: any) => {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const data = await fetch(
-      'http://localhost:3000/api/woocommerce/products?featured=true'
+      'http://localhost:3000/api/woocommerce/products/33'
     )
     const products = await data.json()
 

@@ -1,7 +1,6 @@
-import zeitFetch, { RequestInit, Response } from '@vercel/fetch'
+import { RequestInit, Response } from '@vercel/fetch'
 import { getConfig } from '..'
-
-const fetch = zeitFetch()
+import fetch from './fetch'
 
 export default async function fetchStoreApi<T>(
   endpoint: string,
