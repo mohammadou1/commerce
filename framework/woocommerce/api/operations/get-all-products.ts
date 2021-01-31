@@ -1,5 +1,5 @@
 import { getConfig, WoocommerceConfig } from '..'
-import { productInfoFragment } from '../fragments/product'
+import { productConnectionFragment } from '../fragments/product'
 
 export const getAllProductsQuery = /* GraphQL */ `
   query getAllProducts(
@@ -8,16 +8,16 @@ export const getAllProductsQuery = /* GraphQL */ `
     $featuredProducts: Boolean = false
   ) {
     products(first: $first) @include(if: $products) {
-      ...productInfo
+      ...productConnection
     }
 
     featuredProducts: products(first: $first, where: { featured: true })
       @include(if: $featuredProducts) {
-      ...productInfo
+      ...productConnection
     }
   }
 
-  ${productInfoFragment}
+  ${productConnectionFragment}
 `
 
 const FIELDS = ['products', 'featuredProducts', 'newestProducts']

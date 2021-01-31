@@ -4,11 +4,11 @@ import fetch from './fetch'
 
 const fetchGraphqlApi: GraphQLFetcher = async (
   query: string,
-  { variables, preview } = {},
+  { variables } = {},
   fetchOptions
 ) => {
   const config = getConfig()
-  const res = await fetch(config.commerceUrl + (preview ? '/preview' : ''), {
+  const res = await fetch(config.commerceUrl, {
     ...fetchOptions,
     method: 'POST',
     headers: {
