@@ -10,12 +10,14 @@ Note that this provider is going to be merged into next commerce main repo when 
 
 - [x] getProducts
 - [x] getProduct
-- [ ] useLogin
-- [ ] useSignup
-- [ ] useCustomer
-- [ ] useOrder (Cart and checkout)
+- [ ] useSearch
+- [ ] useLogin (Under development)
+- [ ] useSignup (Under development)
+- [ ] useCustomer (Under development)
+- [ ] useCart
+- [ ] useCheckout
 <br />
-Notice that the current goal is to finish rest apis then do graphql, prs to do graphql are welcome
+Notice that the current goal is to finish GraphQL apis then do rest apis, prs to do both are welcome
 <br />
 <br />
 
