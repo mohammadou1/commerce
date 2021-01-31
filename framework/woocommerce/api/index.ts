@@ -1,3 +1,4 @@
+import { CommerceAPIFetchOptions, GraphQLFetcherResult } from '@commerce/api'
 import type { RequestInit } from '@vercel/fetch'
 import fetchGraphqlApi from './utils/fetch-graphql-api'
 import fetchStoreApi from './utils/fetch-store-api'
@@ -7,7 +8,11 @@ export type WoocommerceConfig = { [key: string]: any } & {
   storeConsumerKey: string
   storeSecretKey: string
   commerceUrl: string
-  // TODO: Add params to storeApi + return type
+  fetch<Data = any, Variables = any>(
+    query: string,
+    queryData?: CommerceAPIFetchOptions<Variables>,
+    fetchOptions?: RequestInit
+  ): Promise<GraphQLFetcherResult<Data>>
   storeApiFetch<T>(endpoint: string, options?: RequestInit): Promise<T>
 }
 

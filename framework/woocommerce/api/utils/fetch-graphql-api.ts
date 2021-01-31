@@ -15,9 +15,14 @@ const fetchGraphqlApi: GraphQLFetcher = async (
       ...fetchOptions?.headers,
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      query,
+      variables,
+    }),
   })
 
   const json = await res.json()
+
   return { data: json.data, res }
 }
 

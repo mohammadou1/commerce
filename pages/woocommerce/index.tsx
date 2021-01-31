@@ -1,19 +1,23 @@
 import { GetServerSideProps } from 'next'
+import getAllProducts from 'framework/woocommerce/api/operations/get-all-products'
 
-const IndexPage = ({ products }: any) => {
-  console.log(products)
+const IndexPage = (props: any) => {
+  console.log(props)
   return <div>This page is to test WooCommerce</div>
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const data = await fetch(
-      'http://localhost:3000/api/woocommerce/products/33'
-    )
-    const products = await data.json()
+    const { products: featuredProducts } = await getAllProducts({
+      variables: { first: 6, field: 'featuredProducts' },
+    })
+    const { products } = await getAllProducts({
+      variables: { first: 6, field: 'products' },
+    })
 
     return {
       props: {
+        featuredProducts,
         products,
       },
     }
