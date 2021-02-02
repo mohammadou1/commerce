@@ -22,6 +22,7 @@ const fetchGraphqlApi: GraphQLFetcher = async (
   })
 
   const json = await res.json()
+  console.log(json.errors)
 
   return { data: json.data, res }
 }

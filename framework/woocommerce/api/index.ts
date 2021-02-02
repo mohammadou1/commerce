@@ -16,14 +16,14 @@ export type WoocommerceConfig = { [key: string]: any } & {
   storeApiFetch<T>(endpoint: string, options?: RequestInit): Promise<T>
 }
 
-const API_URL = process.env.STORE_URL
+const API_URL = process.env.GRAPHQL_STORE_URL
 const STORE_API_URL = process.env.WOOCOMMERCE_API_URL
 const CONSUMER_KEY = process.env.WOOCOMMERCE_CONSUMER_KEY
 const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET
 
 if (!API_URL) {
   throw new Error(
-    `The enviroment variable STORE_URL is missing  and it's required to access your store`
+    `The enviroment variable GRAPHQL_STORE_URL is missing  and it's required to access your store`
   )
 }
 

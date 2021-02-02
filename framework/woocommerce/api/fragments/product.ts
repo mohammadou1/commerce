@@ -61,6 +61,7 @@ export const productInfoFragment = /* GraphQL */ `
       ...variationInfo
     }
   }
+  ${variantInfoFragment}
 `
 
 export const productConnectionFragment = /* GraphQL */ `
@@ -73,5 +74,4 @@ export const productConnectionFragment = /* GraphQL */ `
   }
 
   ${productInfoFragment}
-  ${variantInfoFragment}
 `
