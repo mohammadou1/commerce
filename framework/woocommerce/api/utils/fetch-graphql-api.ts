@@ -12,8 +12,8 @@ const fetchGraphqlApi: GraphQLFetcher = async (
     ...fetchOptions,
     method: 'POST',
     headers: {
-      ...fetchOptions?.headers,
       'Content-Type': 'application/json',
+      ...fetchOptions?.headers,
     },
     body: JSON.stringify({
       query,
@@ -22,7 +22,7 @@ const fetchGraphqlApi: GraphQLFetcher = async (
   })
 
   const json = await res.json()
-  console.log(json.errors)
+  if (json.errors) console.log(json.errors)
 
   return { data: json.data, res }
 }

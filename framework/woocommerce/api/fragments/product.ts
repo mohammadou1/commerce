@@ -24,6 +24,7 @@ export const variantInfoFragment = /* GraphQL */ `
 export const productInfoFragment = /* GraphQL */ `
   fragment productInfo on Product {
     id
+    databaseId
     name
     slug
     date
