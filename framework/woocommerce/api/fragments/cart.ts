@@ -25,6 +25,7 @@ export const cartInfoFragment = /* GraphQL */ `
               name
             }
           }
+          key
           quantity
           subtotal
           subtotalTax

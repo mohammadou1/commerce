@@ -8,6 +8,7 @@ export type WoocommerceConfig = { [key: string]: any } & {
   storeConsumerKey: string
   storeSecretKey: string
   commerceUrl: string
+  cartCookie?: string
   fetch<Data = any, Variables = any>(
     query: string,
     queryData?: CommerceAPIFetchOptions<Variables>,
@@ -70,7 +71,6 @@ const config = new Config({
   storeApiUrl: STORE_API_URL,
   storeConsumerKey: CONSUMER_KEY,
   storeSecretKey: CONSUMER_SECRET,
-  cartCookie: process.env.BIGCOMMERCE_CART_COOKIE ?? 'woo_cartId',
   cartCookieMaxAge: ONE_DAY * 30,
   fetch: fetchGraphqlApi,
   // REST API only

@@ -2,11 +2,13 @@ import { GetServerSideProps } from 'next'
 import getProduct from 'framework/woocommerce/api/operations/get-product'
 import getCart from 'framework/woocommerce/api/operations/get-cart'
 import { useState } from 'react'
-
+import Cookies from 'js-cookie'
 const ProductPage = ({ product, cart }: any) => {
   const [myCart, setCart] = useState(cart)
 
   const addProductToCart = async () => {
+    const cartSession = Cookies.get('woocommerce-session')
+
     const res = await fetch(
       'http://localhost:3000/api/woocommerce/add-to-cart',
       {
@@ -16,8 +18,18 @@ const ProductPage = ({ product, cart }: any) => {
           productId: product.databaseId,
           quantity: 1,
         }),
+        headers: {
+          ...(cartSession && {
+            'woocommerce-session': `${cartSession}`,
+          }),
+        },
       }
     )
+
+    const session = res.headers.get('woocommerce-session')
+    Cookies.set('woocommerce-session', String(session))
+
+    console.log(await res.json())
   }
   return (
     <div>

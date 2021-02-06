@@ -20,7 +20,7 @@ export const getCartQuery = /* GraphQL */ `
 
   ${cartInfoFragment}
 `
-export type ProductVariables = { withCoupon?: boolean } & {
+export type GetCartVariables = { withCoupon?: boolean } & {
   [key: string]: any
 }
 
@@ -30,17 +30,28 @@ async function getCart({
   config,
 }: {
   query?: string
-  variables?: ProductVariables
+  variables?: GetCartVariables
   config?: WoocommerceConfig
   preview?: boolean
 }): Promise<any> {
   config = getConfig(config)
 
-  const { data } = await config.fetch<any>(query, { variables })
+  const headers = config.cartCookie
+    ? { 'woocommerce-session': `Session ${config.cartCookie}` }
+    : undefined
+
+  const { data, res } = await config.fetch<any>(
+    query,
+    { variables },
+    { headers }
+  )
 
   const cart = data?.cart
 
-  return { cart }
+  return {
+    cart,
+    session: res.headers.get('woocommerce-session') || config.cartCookie,
+  }
 }
 
 export default getCart

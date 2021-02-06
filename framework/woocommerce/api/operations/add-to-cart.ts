@@ -12,7 +12,7 @@ export const addToCartQuery = /* GraphQL */ `
   ${cartInfoFragment}
 `
 
-export type ProductVariables = {
+export type AddToCartVariables = {
   input: {
     productId: number
     quantity: number
@@ -29,7 +29,7 @@ async function addToCart({
   config,
 }: {
   query?: string
-  variables: ProductVariables
+  variables: AddToCartVariables
   config?: WoocommerceConfig
   preview?: boolean
 }): Promise<any> {
@@ -39,18 +39,17 @@ async function addToCart({
     throw new Error(`Variables productId and quanitity are required`)
   }
 
-  const { data } = await config.fetch<any>(
+  const headers = config.cartCookie
+    ? { 'woocommerce-session': `Session ${config.cartCookie}` }
+    : undefined
+
+  const { data, res } = await config.fetch<any>(
     query,
     { variables },
-    {
-      headers: {
-        'woocommerce-session':
-          'Session eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3Lm5leHQtY29tbWVyY2Uuc3RvcmUiLCJpYXQiOjE2MTIzODkyMjIsIm5iZiI6MTYxMjM4OTIyMiwiZXhwIjoxNjEyNTYyMDIyLCJkYXRhIjp7ImN1c3RvbWVyX2lkIjoiYzQxZTY2NTNhYzJiYWVmMGY0MDFiMTliMzk2NWIwMWMifX0.iCs7W-B9wDTTylJJdMFTh4qjpdcXsxKTWIfJADMQiZA',
-      },
-    }
+    { headers }
   )
-
-  return { data }
+  const cart = data?.addToCart?.cart
+  return { cart, session: res.headers.get('woocommerce-session') }
 }
 
 export default addToCart
