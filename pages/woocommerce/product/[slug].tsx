@@ -9,22 +9,19 @@ const ProductPage = ({ product, cart }: any) => {
   const addProductToCart = async () => {
     const cartSession = Cookies.get('woocommerce-session')
 
-    const res = await fetch(
-      'http://localhost:3000/api/woocommerce/add-to-cart',
-      {
-        method: 'POST',
+    const res = await fetch('/api/woocommerce/cart', {
+      method: 'POST',
 
-        body: JSON.stringify({
-          productId: product.databaseId,
-          quantity: 1,
+      body: JSON.stringify({
+        productId: product.databaseId,
+        quantity: 1,
+      }),
+      headers: {
+        ...(cartSession && {
+          'woocommerce-session': `${cartSession}`,
         }),
-        headers: {
-          ...(cartSession && {
-            'woocommerce-session': `${cartSession}`,
-          }),
-        },
-      }
-    )
+      },
+    })
 
     const session = res.headers.get('woocommerce-session')
     Cookies.set('woocommerce-session', String(session))

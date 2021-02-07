@@ -23,7 +23,7 @@ export type AddToCartVariables = {
   [key: string]: any
 }
 
-async function addToCart({
+async function addItem({
   query = addToCartQuery,
   variables,
   config,
@@ -52,4 +52,4 @@ async function addToCart({
   return { cart, session: res.headers.get('woocommerce-session') }
 }
 
-export default addToCart
+export default addItem

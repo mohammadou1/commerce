@@ -1,6 +1,6 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { WoocommerceConfig } from '..'
-import { getConfig } from '../index'
+import { getConfig } from '..'
 
 export type WoocommerceApiHandler<
   T = any,
