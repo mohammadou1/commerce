@@ -1,3 +1,28 @@
+export const cartItemFragment = /* GraphQL */ `
+  fragment cartItem on CartItem {
+    product {
+      node {
+        id
+        name
+      }
+    }
+    key
+    quantity
+    subtotal
+    subtotalTax
+    tax
+    total
+  }
+`
+
+export const cartItemUpdateFragment = /* GraphQL */ `
+  fragment cartUpdateInfo on UpdateItemQuantitiesPayload {
+    items {
+      ...cartItem
+    }
+  }
+`
+
 export const cartInfoFragment = /* GraphQL */ `
   fragment cartInfo on Cart {
     chosenShippingMethod
@@ -19,20 +44,10 @@ export const cartInfoFragment = /* GraphQL */ `
     contents {
       edges {
         node {
-          product {
-            node {
-              id
-              name
-            }
-          }
-          key
-          quantity
-          subtotal
-          subtotalTax
-          tax
-          total
+          ...cartItem
         }
       }
     }
   }
+  ${cartItemFragment}
 `
