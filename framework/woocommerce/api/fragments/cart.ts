@@ -51,3 +51,61 @@ export const cartInfoFragment = /* GraphQL */ `
   }
   ${cartItemFragment}
 `
+
+export const getCartQuery = /* GraphQL */ `
+  query getCart($withCoupon: Boolean = true) {
+    cart {
+      ...cartInfo
+      appliedCoupons @include(if: $withCoupon) {
+        edges {
+          node {
+            id
+            amount
+            dateExpiry
+            discountType
+          }
+        }
+      }
+    }
+  }
+
+  ${cartInfoFragment}
+`
+
+export const removeItemsQuery = /* GraphQL */ `
+  mutation removeItems($input: RemoveItemsFromCartInput!) {
+    removeItemsFromCart(input: $input) {
+      cart {
+        ...cartInfo
+      }
+    }
+  }
+  ${cartInfoFragment}
+`
+
+export const updateItemQuery = /* GraphQL */ `
+  mutation updateItemQuantity(
+    $input: UpdateItemQuantitiesInput!
+    $withCart: Boolean = true
+  ) {
+    updateItemQuantities(input: $input) {
+      # ...cartUpdateInfo
+      cart @include(if: $withCart) {
+        ...cartInfo
+      }
+    }
+  }
+
+  ${cartInfoFragment}
+`
+
+export const addToCartQuery = /* GraphQL */ `
+  mutation addToCart($input: AddToCartInput!) {
+    addToCart(input: $input) {
+      cart {
+        ...cartInfo
+      }
+    }
+  }
+  ${cartInfoFragment}
+`

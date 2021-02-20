@@ -23,7 +23,9 @@
       "@commerce/*": ["framework/commerce/*"],
       "@commerce": ["framework/commerce"],
       "@framework/*": ["framework/bigcommerce/*"],
-      "@framework": ["framework/bigcommerce"]
+      "@framework": ["framework/bigcommerce"],
+      "@woocommerce": ["framework/woocommerce"],
+      "@woocommerce/*": ["framework/woocommerce/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],

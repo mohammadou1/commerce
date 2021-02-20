@@ -1,22 +1,5 @@
 import { getConfig, WoocommerceConfig } from '..'
-import { cartInfoFragment, cartItemUpdateFragment } from '../fragments/cart'
-
-export const updateItemQuery = /* GraphQL */ `
-  mutation updateItemQuantity(
-    $input: UpdateItemQuantitiesInput!
-    $withCart: Boolean = false
-  ) {
-    updateItemQuantities(input: $input) {
-      ...cartUpdateInfo
-      cart @include(if: $withCart) {
-        ...cartInfo
-      }
-    }
-  }
-
-  ${cartInfoFragment}
-  ${cartItemUpdateFragment}
-`
+import { updateItemQuery } from '../fragments/cart'
 
 export type UpdateItems = { key: string; quantity: number }[]
 export type UpdateItemVariables = {

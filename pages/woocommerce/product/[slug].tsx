@@ -1,33 +1,17 @@
 import { GetServerSideProps } from 'next'
 import getProduct from 'framework/woocommerce/api/operations/get-product'
-import getCart from 'framework/woocommerce/api/operations/get-cart'
-import { useState } from 'react'
-import Cookies from 'js-cookie'
+import useAddItem from '@woocommerce/cart/use-add-item'
+import Layout from '@components/woocommerce/common/Layout'
+
 const ProductPage = ({ product, cart }: any) => {
-  const [myCart, setCart] = useState(cart)
+  const addItem = useAddItem()
 
   const addProductToCart = async () => {
-    const cartSession = Cookies.get('woocommerce-session')
-
-    const res = await fetch('/api/woocommerce/cart', {
-      method: 'POST',
-
-      body: JSON.stringify({
-        productId: product.databaseId,
-        quantity: 1,
-      }),
-      headers: {
-        ...(cartSession && {
-          'woocommerce-session': `${cartSession}`,
-        }),
-      },
+    await addItem({
+      variables: { input: { productId: product.databaseId, quantity: 1 } },
     })
-
-    const session = res.headers.get('woocommerce-session')
-    Cookies.set('woocommerce-session', String(session))
-
-    console.log(await res.json())
   }
+
   return (
     <div>
       <div>{product.name}</div>
@@ -50,10 +34,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       variables: { id: String(ctx.query.slug) },
     })
 
-    const { cart } = await getCart({})
-
     return {
-      props: { product, cart },
+      props: { product },
     }
   } catch (error) {
     console.log(error)
@@ -65,3 +47,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 }
 export default ProductPage
+
+ProductPage.Layout = Layout

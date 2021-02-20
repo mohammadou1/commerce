@@ -6,8 +6,15 @@ export const getAllProductsQuery = /* GraphQL */ `
     $first: Int = 10
     $products: Boolean = false
     $featuredProducts: Boolean = false
+    $newestProducts: Boolean = false
+    $bestSellingProducts: Boolean = false
+    $includeIds: [Int!]
   ) {
-    products(first: $first) @include(if: $products) {
+    products(first: $first, where: { include: $includeIds })
+      @include(if: $products) {
+      ...productConnection
+    }
+    newestProducts: products(first: $first) @include(if: $newestProducts) {
       ...productConnection
     }
 
@@ -15,14 +22,30 @@ export const getAllProductsQuery = /* GraphQL */ `
       @include(if: $featuredProducts) {
       ...productConnection
     }
+
+    bestSellingProducts: products(
+      first: $first
+      where: { orderby: { field: TOTAL_SALES } }
+    ) @include(if: $bestSellingProducts) {
+      ...productConnection
+    }
   }
 
   ${productConnectionFragment}
 `
 
-const FIELDS = ['products', 'featuredProducts', 'newestProducts']
+const FIELDS = [
+  'products',
+  'featuredProducts',
+  'newestProducts',
+  'bestSellingProducts',
+]
 
-export type ProductTypes = 'products' | 'featuredProducts' | 'newestProducts'
+export type ProductTypes =
+  | 'products'
+  | 'featuredProducts'
+  | 'newestProducts'
+  | 'bestSellingProducts'
 
 export type ProductVariables = { field?: ProductTypes } & { [key: string]: any }
 

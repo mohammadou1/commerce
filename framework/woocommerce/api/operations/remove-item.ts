@@ -1,16 +1,5 @@
 import { getConfig, WoocommerceConfig } from '..'
-import { cartInfoFragment } from '../fragments/cart'
-
-export const removeItemsQuery = /* GraphQL */ `
-  mutation removeItems($input: RemoveItemsFromCartInput!) {
-    removeItemsFromCart(input: $input) {
-      cart {
-        ...cartInfo
-      }
-    }
-  }
-  ${cartInfoFragment}
-`
+import { removeItemsQuery } from '../fragments/cart'
 
 export type RemoveItemsVariables = {
   input: {

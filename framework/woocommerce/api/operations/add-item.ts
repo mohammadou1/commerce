@@ -1,17 +1,6 @@
 import { cartInfoFragment } from '../fragments/cart'
 import { WoocommerceConfig, getConfig } from '..'
 
-export const addToCartQuery = /* GraphQL */ `
-  mutation addToCart($input: AddToCartInput!) {
-    addToCart(input: $input) {
-      cart {
-        ...cartInfo
-      }
-    }
-  }
-  ${cartInfoFragment}
-`
-
 export type AddToCartVariables = {
   input: {
     productId: number

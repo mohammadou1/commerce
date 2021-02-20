@@ -72,6 +72,7 @@ const config = new Config({
   storeConsumerKey: CONSUMER_KEY,
   storeSecretKey: CONSUMER_SECRET,
   cartCookieMaxAge: ONE_DAY * 30,
+  cartCookie: process.env.NEXT_PUBLIC_CART_COOKIE ?? 'woocommerce-session',
   fetch: fetchGraphqlApi,
   // REST API only
   storeApiFetch: fetchStoreApi,

@@ -1,25 +1,6 @@
 import { getConfig, WoocommerceConfig } from '..'
-import { cartInfoFragment } from '../fragments/cart'
+import { getCartQuery } from '../fragments/cart'
 
-export const getCartQuery = /* GraphQL */ `
-  query getCart($withCoupon: Boolean = false) {
-    cart {
-      ...cartInfo
-      appliedCoupons @include(if: $withCoupon) {
-        edges {
-          node {
-            id
-            amount
-            dateExpiry
-            discountType
-          }
-        }
-      }
-    }
-  }
-
-  ${cartInfoFragment}
-`
 export type GetCartVariables = { withCoupon?: boolean } & {
   [key: string]: any
 }
