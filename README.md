@@ -14,7 +14,7 @@ Note that this provider is going to be merged into next commerce main repo when 
 - [ ] useLogin (Under development)
 - [ ] useSignup (Under development)
 - [ ] useCustomer (Under development)
-- [ ] useCart
+- [x] useCart
 - [ ] useCheckout
 <br />
 Notice that the current goal is to finish GraphQL apis then do rest apis, prs to do both are welcome
