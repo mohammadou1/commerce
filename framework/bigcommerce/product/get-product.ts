@@ -1,7 +1,9 @@
-import type { GetProductQuery, GetProductQueryVariables } from '../../schema'
-import setProductLocaleMeta from '../utils/set-product-locale-meta'
-import { productInfoFragment } from '../fragments/product'
-import { BigcommerceConfig, getConfig } from '..'
+import type { GetProductQuery, GetProductQueryVariables } from '../schema'
+import setProductLocaleMeta from '../api/utils/set-product-locale-meta'
+import { productInfoFragment } from '../api/fragments/product'
+import { BigcommerceConfig, getConfig } from '../api'
+import { normalizeProduct } from '@framework/lib/normalize'
+import type { Product } from '@commerce/types'
 
 export const getProductQuery = /* GraphQL */ `
   query getProduct(
@@ -92,7 +94,7 @@ async function getProduct({
   variables: ProductVariables
   config?: BigcommerceConfig
   preview?: boolean
-}): Promise<GetProductResult> {
+}): Promise<Product | {} | any> {
   config = getConfig(config)
 
   const locale = vars.locale || config.locale
@@ -109,7 +111,8 @@ async function getProduct({
     if (locale && config.applyLocale) {
       setProductLocaleMeta(product)
     }
-    return { product }
+
+    return { product: normalizeProduct(product as any) }
   }
 
   return {}

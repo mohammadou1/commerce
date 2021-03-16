@@ -1,7 +1,7 @@
-import type { RecursivePartial, RecursiveRequired } from '../utils/types'
-import { definitions } from '../definitions/wishlist'
-import { BigcommerceConfig, getConfig } from '..'
-import getAllProducts, { ProductEdge } from './get-all-products'
+import type { RecursivePartial, RecursiveRequired } from '../api/utils/types'
+import { definitions } from '../api/definitions/wishlist'
+import { BigcommerceConfig, getConfig } from '../api'
+import getAllProducts, { ProductEdge } from '../product/get-all-products'
 
 export type Wishlist = Omit<definitions['wishlist_Full'], 'items'> & {
   items?: WishlistItem[]
@@ -68,7 +68,7 @@ async function getCustomerWishlist({
       const productsById = graphqlData.products.reduce<{
         [k: number]: ProductEdge
       }>((prods, p) => {
-        prods[p.node.entityId] = p
+        prods[Number(p.node.entityId)] = p as any
         return prods
       }, {})
       // Populate the wishlist items with the graphql products

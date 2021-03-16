@@ -8,8 +8,8 @@ import { Layout } from '@components/common'
 import getSlug from '@lib/get-slug'
 import { missingLocaleInPages } from '@lib/usage-warns'
 import { getConfig } from '@framework/api'
-import getPage from '@framework/api/operations/get-page'
-import getAllPages from '@framework/api/operations/get-all-pages'
+import getPage from '@framework/common/get-page'
+import getAllPages from '@framework/common/get-all-pages'
 import { defaultPageProps } from '@lib/defaults'
 
 export async function getStaticProps({
@@ -65,7 +65,7 @@ export default function Pages({
   page,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div className="max-w-2xl mx-auto py-20">
+    <div className="max-w-2xl mx-8 sm:mx-auto py-20">
       {page?.body && <Text html={page.body} />}
     </div>
   )

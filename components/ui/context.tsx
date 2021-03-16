@@ -52,6 +52,10 @@ type Action =
       type: 'SET_MODAL_VIEW'
       view: MODAL_VIEWS
     }
+  | {
+      type: 'SET_USER_AVATAR'
+      value: string
+    }
 
 type MODAL_VIEWS = 'SIGNUP_VIEW' | 'LOGIN_VIEW' | 'FORGOT_VIEW'
 type ToastText = string
@@ -90,6 +94,7 @@ function uiReducer(state: State, action: Action) {
       return {
         ...state,
         displayModal: true,
+        displaySidebar: false,
       }
     }
     case 'CLOSE_MODAL': {
@@ -122,6 +127,12 @@ function uiReducer(state: State, action: Action) {
         toastText: action.text,
       }
     }
+    case 'SET_USER_AVATAR': {
+      return {
+        ...state,
+        userAvatar: action.value,
+      }
+    }
   }
 }
 
@@ -146,6 +157,9 @@ export const UIProvider: FC = (props) => {
   const openToast = () => dispatch({ type: 'OPEN_TOAST' })
   const closeToast = () => dispatch({ type: 'CLOSE_TOAST' })
 
+  const setUserAvatar = (value: string) =>
+    dispatch({ type: 'SET_USER_AVATAR', value })
+
   const setModalView = (view: MODAL_VIEWS) =>
     dispatch({ type: 'SET_MODAL_VIEW', view })
 
@@ -163,6 +177,7 @@ export const UIProvider: FC = (props) => {
       setModalView,
       openToast,
       closeToast,
+      setUserAvatar,
     }),
     [state]
   )

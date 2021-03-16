@@ -1,31 +1,69 @@
-import type { responseInterface } from 'swr'
 import Cookies from 'js-cookie'
-import type { HookInput, HookFetcher, HookFetcherOptions } from '../utils/types'
-import useData, { SwrOptions } from '../utils/use-data'
-import { useCommerce } from '..'
+import type { Cart } from '../types'
+import type {
+  Prop,
+  HookFetcherFn,
+  UseHookInput,
+  UseHookResponse,
+} from '../utils/types'
+import useData from '../utils/use-data'
+import { Provider, useCommerce } from '..'
 
-export type CartResponse<Result> = responseInterface<Result, Error> & {
-  isEmpty: boolean
+export type FetchCartInput = {
+  cartId?: Cart['id']
 }
 
-export type CartInput = {
-  cartId: string | undefined
+export type UseCartHandler<P extends Provider> = Prop<
+  Prop<P, 'cart'>,
+  'useCart'
+>
+
+export type UseCartInput<P extends Provider> = UseHookInput<UseCartHandler<P>>
+
+export type CartResponse<P extends Provider> = UseHookResponse<
+  UseCartHandler<P>
+>
+
+export type UseCart<P extends Provider> = Partial<
+  UseCartInput<P>
+> extends UseCartInput<P>
+  ? (input?: UseCartInput<P>) => CartResponse<P>
+  : (input: UseCartInput<P>) => CartResponse<P>
+
+export const fetcher: HookFetcherFn<Cart | null, FetchCartInput> = async ({
+  options,
+  input: { cartId },
+  fetch,
+}) => {
+  return cartId ? await fetch({ ...options }) : null
 }
 
-export default function useCart<Result>(
-  options: HookFetcherOptions,
-  input: HookInput,
-  fetcherFn: HookFetcher<Result, CartInput>,
-  swrOptions?: SwrOptions<Result, CartInput>
+export default function useCart<P extends Provider>(
+  input: UseCartInput<P> = {}
 ) {
-  const { cartCookie } = useCommerce()
+  const { providerRef, fetcherRef, cartCookie } = useCommerce<P>()
 
-  const fetcher: typeof fetcherFn = (options, input, fetch) => {
-    input.cartId = Cookies.get(cartCookie)
-    return fetcherFn(options, input, fetch)
+  const provider = providerRef.current
+  const opts = provider.cart?.useCart
+
+  const fetcherFn = opts?.fetcher ?? fetcher
+  const useHook = opts?.useHook ?? ((ctx) => ctx.useData())
+
+  const wrapper: typeof fetcher = (context) => {
+    context.input.cartId = Cookies.get(cartCookie)
+    return fetcherFn(context)
   }
 
-  const response = useData(options, input, fetcher, swrOptions)
-
-  return Object.assign(response, { isEmpty: true }) as CartResponse<Result>
+  return useHook({
+    input,
+    useData(ctx) {
+      const response = useData(
+        { ...opts!, fetcher: wrapper },
+        ctx?.input ?? [],
+        provider.fetcher ?? fetcherRef.current,
+        ctx?.swrOptions ?? input.swrOptions
+      )
+      return response
+    },
+  })
 }

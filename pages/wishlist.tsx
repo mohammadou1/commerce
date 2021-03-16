@@ -1,33 +1,50 @@
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import type { GetStaticPropsContext } from 'next'
-import { getConfig } from '@framework/api'
-import getAllPages from '@framework/api/operations/get-all-pages'
-import useWishlist from '@framework/wishlist/use-wishlist'
-import { Layout } from '@components/common'
+
 import { Heart } from '@components/icons'
+import { Layout } from '@components/common'
 import { Text, Container } from '@components/ui'
-import { WishlistCard } from '@components/wishlist'
 import { defaultPageProps } from '@lib/defaults'
+import { getConfig } from '@framework/api'
+import { useCustomer } from '@framework/customer'
+import { WishlistCard } from '@components/wishlist'
+import useWishlist from '@framework/wishlist/use-wishlist'
+import getAllPages from '@framework/common/get-all-pages'
+import Features from '@commerce/utils/features'
 
 export async function getStaticProps({
   preview,
   locale,
 }: GetStaticPropsContext) {
+  // Disabling page if Feature is not available
+  if (Features.isEnabled('wishlist')) {
+    return {
+      notFound: true,
+    }
+  }
+
   const config = getConfig({ locale })
   const { pages } = await getAllPages({ config, preview })
   return {
-    props: { ...defaultPageProps, pages },
+    props: {
+      pages,
+      ...defaultPageProps,
+    },
   }
 }
 
 export default function Wishlist() {
-  const { data, isEmpty } = useWishlist({ includeProducts: true })
+  const { data: customer } = useCustomer()
+  const { data, isLoading, isEmpty } = useWishlist()
+  const router = useRouter()
 
   return (
     <Container>
       <div className="mt-3 mb-20">
         <Text variant="pageHeading">My Wishlist</Text>
         <div className="group flex flex-col">
-          {isEmpty ? (
+          {isLoading || isEmpty ? (
             <div className="flex-1 px-12 py-24 flex flex-col justify-center items-center ">
               <span className="border border-dashed border-secondary flex items-center justify-center w-16 h-16 bg-primary p-12 rounded-lg text-primary">
                 <Heart className="absolute" />
@@ -42,7 +59,7 @@ export default function Wishlist() {
           ) : (
             data &&
             data.items?.map((item) => (
-              <WishlistCard key={item.id} item={item} />
+              <WishlistCard key={item.id} product={item as any} />
             ))
           )}
         </div>

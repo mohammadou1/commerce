@@ -3,16 +3,31 @@ import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { getConfig } from '@framework/api'
-import getAllPages from '@framework/api/operations/get-all-pages'
-import getSiteInfo from '@framework/api/operations/get-site-info'
-import useSearch from '@framework/products/use-search'
+
 import { Layout } from '@components/common'
 import { ProductCard } from '@components/product'
 import { Container, Grid, Skeleton } from '@components/ui'
 
+import { getConfig } from '@framework/api'
+import useSearch from '@framework/product/use-search'
+import getAllPages from '@framework/common/get-all-pages'
+import getSiteInfo from '@framework/common/get-site-info'
+
 import rangeMap from '@lib/range-map'
+
+// TODO(bc) Remove this. This should come from the API
 import getSlug from '@lib/get-slug'
+
+// TODO (bc) : Remove or standarize this.
+const SORT = Object.entries({
+  'latest-desc': 'Latest arrivals',
+  'trending-desc': 'Trending',
+  'price-asc': 'Price: Low to high',
+  'price-desc': 'Price: High to low',
+})
+
+import Features from '@commerce/utils/features'
+
 import {
   filterQuery,
   getCategoryPath,
@@ -27,22 +42,23 @@ export async function getStaticProps({
   const config = getConfig({ locale })
   const { pages } = await getAllPages({ config, preview })
   const { categories, brands } = await getSiteInfo({ config, preview })
-
+  const isWishlistEnabled = Features.isEnabled('wishlist')
   return {
-    props: { pages, categories, brands },
+    props: {
+      pages,
+      categories,
+      brands,
+      commerceFeatures: {
+        wishlist: isWishlistEnabled,
+      },
+    },
   }
 }
-
-const SORT = Object.entries({
-  'latest-desc': 'Latest arrivals',
-  'trending-desc': 'Trending',
-  'price-asc': 'Price: Low to high',
-  'price-desc': 'Price: High to low',
-})
 
 export default function Search({
   categories,
   brands,
+  commerceFeatures: { wishlist },
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [activeFilter, setActiveFilter] = useState('')
   const [toggleFilter, setToggleFilter] = useState(false)
@@ -76,7 +92,6 @@ export default function Search({
     } else {
       setToggleFilter(!toggleFilter)
     }
-
     setActiveFilter(filter)
   }
 
@@ -91,7 +106,7 @@ export default function Search({
                 <button
                   type="button"
                   onClick={(e) => handleClick(e, 'categories')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
+                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
                   id="options-menu"
                   aria-haspopup="true"
                   aria-expanded="true"
@@ -106,9 +121,9 @@ export default function Search({
                     fill="currentColor"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                   </svg>
                 </button>
@@ -190,7 +205,7 @@ export default function Search({
                 <button
                   type="button"
                   onClick={(e) => handleClick(e, 'brands')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-900 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
+                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-900 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
                   id="options-menu"
                   aria-haspopup="true"
                   aria-expanded="true"
@@ -205,9 +220,9 @@ export default function Search({
                     fill="currentColor"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                   </svg>
                 </button>
@@ -333,14 +348,17 @@ export default function Search({
 
           {data ? (
             <Grid layout="normal">
-              {data.products.map(({ node }) => (
+              {data.products.map((product: Product) => (
                 <ProductCard
                   variant="simple"
-                  key={node.path}
+                  key={product.path}
                   className="animated fadeIn"
-                  product={node}
-                  imgWidth={480}
-                  imgHeight={480}
+                  product={product}
+                  imgProps={{
+                    width: 480,
+                    height: 480,
+                  }}
+                  wishlist={wishlist}
                 />
               ))}
             </Grid>
@@ -365,7 +383,7 @@ export default function Search({
                 <button
                   type="button"
                   onClick={(e) => handleClick(e, 'sort')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
+                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
                   id="options-menu"
                   aria-haspopup="true"
                   aria-expanded="true"
@@ -378,9 +396,9 @@ export default function Search({
                     fill="currentColor"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                   </svg>
                 </button>

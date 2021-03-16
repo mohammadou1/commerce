@@ -2,7 +2,6 @@ import { parseCartItem } from '../../utils/parse-item'
 import getCartCookie from '../../utils/get-cart-cookie'
 import type { CartHandlers } from '..'
 
-// Return current cart info
 const updateItem: CartHandlers['updateItem'] = async ({
   res,
   body: { cartId, itemId, item },
@@ -16,7 +15,7 @@ const updateItem: CartHandlers['updateItem'] = async ({
   }
 
   const { data } = await config.storeApiFetch(
-    `/v3/carts/${cartId}/items/${itemId}`,
+    `/v3/carts/${cartId}/items/${itemId}?include=line_items.physical_items.options`,
     {
       method: 'PUT',
       body: JSON.stringify({
