@@ -1,5 +1,5 @@
 import rangeMap from '@lib/range-map'
-import getAllProducts from '@woocommerce/api/operations/get-all-products'
+import getAllProducts from '@woocommerce/products/get-all-products'
 import { getConfig } from '@woocommerce/api'
 import type { InferGetStaticPropsType, GetStaticPropsContext } from 'next'
 const nonNullable = (v: any) => v
@@ -53,8 +53,9 @@ export async function getStaticProps({ preview }: GetStaticPropsContext) {
   }
 }
 
-export default function Home({
-  featured,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  console.log(props)
   return <div></div>
 }

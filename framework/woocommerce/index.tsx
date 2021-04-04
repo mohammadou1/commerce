@@ -1,49 +1,36 @@
-import { ReactNode } from 'react'
-import Cookies from 'js-cookie'
+import type { ReactNode } from 'react'
 import {
   CommerceConfig,
   CommerceProvider as CoreCommerceProvider,
   useCommerce as useCoreCommerce,
 } from '@commerce'
+import { woocommerceProvider, WoocommerceProvider } from './provider'
+import { WOOCOMMERCE_COOKIE_SESSION } from './const'
+
+export { woocommerceProvider }
+export type { WoocommerceProvider }
 
 export const woocommerceConfig: CommerceConfig = {
   locale: '',
-  cartCookie: process.env.NEXT_PUBLIC_CART_COOKIE ?? 'woocommerce-session',
-  async fetcher({ url, method = 'GET', body: bodyObj }) {
-    const hasBody = Boolean(bodyObj)
-    const cartId = Cookies.get('woocommerce-session')
-
-    const body = hasBody ? JSON.stringify(bodyObj) : undefined
-
-    const headers = hasBody
-      ? {
-          'Content-Type': 'application/json',
-          ...(cartId && { 'woocommerce-session': `Session ${cartId}` }),
-        }
-      : undefined
-    const res = await fetch(url!, { method, body, headers })
-
-    if (res.ok) {
-      const resCartId = res.headers.get('woocommerce-session')
-      if (resCartId && cartId !== resCartId)
-        Cookies.set('woocommerce-session', String(resCartId))
-
-      const { data } = await res.json()
-      return data
-    }
-  },
+  cartCookie: WOOCOMMERCE_COOKIE_SESSION,
 }
+
+export type WoocommerceConfig = Partial<CommerceConfig>
 
 export type WoocommerceProps = {
   children?: ReactNode
-}
+  locale: never
+} & WoocommerceConfig
 
-export function CommerceProvider({ children }: WoocommerceProps) {
+export function CommerceProvider({ children, ...config }: WoocommerceProps) {
   return (
-    <CoreCommerceProvider config={{ ...woocommerceConfig }}>
+    <CoreCommerceProvider
+      provider={woocommerceProvider}
+      config={{ ...woocommerceConfig, ...config }}
+    >
       {children}
     </CoreCommerceProvider>
   )
 }
 
-export const useCommerce = () => useCoreCommerce()
+export const useCommerce = () => useCoreCommerce<WoocommerceProvider>()

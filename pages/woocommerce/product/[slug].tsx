@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import getProduct from 'framework/woocommerce/api/operations/get-product'
+import getProduct from '@woocommerce/products/get-product'
 import useAddItem from '@woocommerce/cart/use-add-item'
 import Layout from '@components/woocommerce/common/Layout'
 

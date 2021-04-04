@@ -1,5 +1,5 @@
-import { productInfoFragment } from '../fragments/product'
-import { WoocommerceConfig, getConfig } from '../index'
+import { productInfoFragment } from '../api/fragments/product'
+import { WoocommerceConfig, getConfig } from '../api'
 
 export enum ProductIdTypeEnum {
   SLUG = 'SLUG',

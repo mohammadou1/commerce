@@ -1,26 +1,22 @@
-import { CommerceAPIFetchOptions, GraphQLFetcherResult } from '@commerce/api'
 import type { RequestInit } from '@vercel/fetch'
+import type { CommerceAPIConfig } from '@commerce/api'
 import fetchGraphqlApi from './utils/fetch-graphql-api'
 import fetchStoreApi from './utils/fetch-store-api'
+import {
+  WOOCOMMERCE_COOKIE_SESSION,
+  WOOCOMMERCE_COOKIE_AGE,
+  API_URL,
+  STORE_API_URL,
+} from '../const'
 
-export type WoocommerceConfig = { [key: string]: any } & {
+export interface WoocommerceConfig extends CommerceAPIConfig {
   storeApiUrl: string
-  storeConsumerKey: string
-  storeSecretKey: string
   commerceUrl: string
-  cartCookie?: string
-  fetch<Data = any, Variables = any>(
-    query: string,
-    queryData?: CommerceAPIFetchOptions<Variables>,
-    fetchOptions?: RequestInit
-  ): Promise<GraphQLFetcherResult<Data>>
   storeApiFetch<T>(endpoint: string, options?: RequestInit): Promise<T>
 }
 
-const API_URL = process.env.GRAPHQL_STORE_URL
-const STORE_API_URL = process.env.WOOCOMMERCE_API_URL
-const CONSUMER_KEY = process.env.WOOCOMMERCE_CONSUMER_KEY
-const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET
+// const CONSUMER_KEY = process.env.WOOCOMMERCE_CONSUMER_KEY
+// const CONSUMER_SECRET = process.env.WOOCOMMERCE_CONSUMER_SECRET
 
 if (!API_URL) {
   throw new Error(
@@ -33,23 +29,15 @@ if (!STORE_API_URL) {
     `The enviroment variable WOOCOMMERCE_API_URL is missing  and it's required to access your store`
   )
 }
-if (!CONSUMER_KEY) {
-  throw new Error(
-    `The enviroment variable WOOCOMMERCE_CONSUMER_KEY is missing  and it's required to access your store`
-  )
-}
-if (!CONSUMER_SECRET) {
-  throw new Error(
-    `The enviroment variable WOOCOMMERCE_CONSUMER_SECRET is missing  and it's required to access your store`
-  )
-}
 
 export class Config {
   private config: WoocommerceConfig
 
-  constructor(config: WoocommerceConfig) {
+  constructor(config: Omit<WoocommerceConfig, 'customerCookie' | 'apiToken'>) {
     this.config = {
       ...config,
+      customerCookie: '',
+      apiToken: '',
     }
   }
 
@@ -69,12 +57,9 @@ const ONE_DAY = 60 * 60 * 24
 const config = new Config({
   commerceUrl: API_URL,
   storeApiUrl: STORE_API_URL,
-  storeConsumerKey: CONSUMER_KEY,
-  storeSecretKey: CONSUMER_SECRET,
-  cartCookieMaxAge: ONE_DAY * 30,
-  cartCookie: process.env.NEXT_PUBLIC_CART_COOKIE ?? 'woocommerce-session',
+  cartCookieMaxAge: ONE_DAY * WOOCOMMERCE_COOKIE_AGE,
+  cartCookie: WOOCOMMERCE_COOKIE_SESSION ?? 'woocommerce-session',
   fetch: fetchGraphqlApi,
-  // REST API only
   storeApiFetch: fetchStoreApi,
 })
 

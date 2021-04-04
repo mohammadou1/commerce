@@ -1,5 +1,6 @@
-import { getConfig, WoocommerceConfig } from '..'
-import { productConnectionFragment } from '../fragments/product'
+import { getConfig, WoocommerceConfig } from '../api'
+// import { Product } from '@commerce/types'
+import { productConnectionFragment } from '../api/fragments/product'
 
 export const getAllProductsQuery = /* GraphQL */ `
   query getAllProducts(
