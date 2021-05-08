@@ -6,16 +6,18 @@ Pull requests are welcome
 Note that this provider is going to be merged into next commerce main repo when it's done
 [Next Commerce](https://github.com/vercel/commerce)
 
-## Features.
+> The provider will start development phase as soon as next/commerce supports woocommerce difficulties
+## Roadmap.
 
-- [x] getProducts
-- [x] getProduct
-- [ ] useSearch
-- [ ] useLogin (Under development)
-- [ ] useSignup (Under development)
-- [ ] useCustomer (Under development)
-- [x] useCart
-- [ ] useCheckout
+- [ ] next/commerce supporting WooCommerce data structure
+- [ ] rebuilding config, WooCommerceProvider and settings
+- [ ] useProducts hooks
+- [ ] useLogin, useSignup and useCustomer
+- [ ] useCart hooks
+- [ ] useCheckout hooks
+- [ ] normalize data to the unified version
+
+
 <br />
 Notice that the current goal is to finish GraphQL apis then do rest apis, prs to do both are welcome
 <br />
